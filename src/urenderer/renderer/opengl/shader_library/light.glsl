@@ -18,15 +18,18 @@ struct Light
 // Calcula a atenuação da luz
 float computeLightAttenuation(Light light, vec3 position)
 {
+    fdist = light.intensity * pow((light.reference_distance/max(mag(light.position - position), light.reference_distance)), 2);
     if(light.type == LIGHT_DIRECTIONAL)
     {
+        fdir = max(dot(computeLightDirection(light, position),light.direction), 0);
+        light.intensity * fdir * light.direction;
     }
 }
 
 //Calcula a direção da luz
 vec3 computeLightDirection(Light light, vec3 position)
 {
-
+    return(norm(light.position - position));
 }
 
 #define LIBRARY_LIGHT

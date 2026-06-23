@@ -73,7 +73,7 @@ class OpenGLRenderer(Renderer):
 
         ## SEU CÓDIGO AQUI ######################################################
         # Habilite o uso de GL_FRAMEBUFFER_SRGB para convertor cores para sRGB
-
+        GL.glEnable(GL.GL_FRAMEBUFFER_SRGB)
         #########################################################################
 
         glfw.set_framebuffer_size_callback(
@@ -189,7 +189,20 @@ class OpenGLRenderer(Renderer):
 
         for i, light_info in enumerate(self._lights):
             light = cast(Light, light_info["node"])
+
             light_position = cast(np.ndarray, light_info["position"])
+            light_color = cast(np.ndarray, light_info["color"])
+            light_type = cast(np.ndarray, light_info["type"])
+            light_intensity = cast(np.ndarray, light_info["intensity"])
+            light_direction = cast(np.ndarray, light_info["direction"])
+            light_ref_distance = cast(np.ndarray, light_info["reference_distance"])
+            
+            material.shader.set_uniform(f"lights[{i}.position]",light_position)
+            material.shader.set_uniform(f"lights[{i}.color]",light_color)
+            material.shader.set_uniform(f"lights[{i}.type]",light_type)
+            material.shader.set_uniform(f"lights[{i}.intensity]",light_intensity)
+            material.shader.set_uniform(f"lights[{i}.direction]",light_direction)
+            material.shader.set_uniform(f"lights[{i}.reference_distance",light_ref_distance)
 
         #########################################################################
 
