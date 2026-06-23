@@ -81,7 +81,9 @@ class Shader:
 
             ## SEU CÓDIGO AQUI ######################################################
             # Cria e compila o vertex shader
-
+            vertex_shader = GL.glCreateShader(GL.GL_VERTEX_SHADER)
+            GL.glShaderSource(vertex_shader, vertex_shader_source)
+            GL.glCompileShader(vertex_shader)
             #########################################################################
 
             vertex_shader = cast(int, vertex_shader)
@@ -91,7 +93,9 @@ class Shader:
 
             ## SEU CÓDIGO AQUI ######################################################
             # Cria e compila o fragment shader
-
+            fragment_shader = GL.glCreateShader(GL.GL_FRAGMENT_SHADER)
+            GL.glShaderSource(fragment_shader, fragment_shader_source)
+            GL.glCompileShader(fragment_shader)
             #########################################################################
 
             fragment_shader = cast(int, fragment_shader)
@@ -126,8 +130,9 @@ class Shader:
         '''
         ## SEU CÓDIGO AQUI ######################################################
         # Usa o programa compilado e linkado anteriormente no contexto atual
-
+        GL.glUseProgram(self.shader_program)
         #########################################################################
+
 
     def _get_uniform_location(self, name: str) -> int:
         '''
