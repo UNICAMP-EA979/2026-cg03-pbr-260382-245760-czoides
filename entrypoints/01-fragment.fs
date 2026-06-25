@@ -38,7 +38,7 @@ void main()
         //Calcule a contribuição da luz e acumule na color
         vec3 direction = computeLightDirection(light, worldPosition);
         float lightnormal = max(dot(direction, worldNormalNormalized), 0.0f)/1.0f;
-        vec3 lightContribution = lightColor * lightnormal * attenuation;
+        vec3 lightContribution = PI * lightColor * lightnormal * attenuation;
         color +=  lightContribution;
     }
 
