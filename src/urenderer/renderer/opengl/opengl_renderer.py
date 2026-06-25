@@ -63,11 +63,11 @@ class OpenGLRenderer(Renderer):
         ## SEU CÓDIGO AQUI ######################################################
         # Cria a janela, associando ela ao contexto
         # e configurando o tamanho dela no OpenGl
-        window = glfw.create_window(800, 600, "LearnOpenGL", None, None)
+        window = glfw.create_window(screen_width, screen_height, "LearnOpenGL", None, None)
         glfw.make_context_current(window)
 
         # Seta tamamho da tela
-        GL.glViewport(0, 0, 800, 600)
+        GL.glViewport(0, 0, screen_width, screen_height)
 
         #########################################################################
 
