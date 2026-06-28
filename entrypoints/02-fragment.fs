@@ -21,7 +21,7 @@ void main()
     vec3 worldNormalNormalized = normalize(worldNormal);
 
     //Calcula a direção de visualização (saindo do ponto)
-    vec3 viewDirection = cameraPos - worldPosition;
+    vec3 viewDirection = normalize(cameraPos - worldPosition);
 
     vec3 baseColor = vec3(0.5, 0.2, 0.5);
     float metallic = 0;
