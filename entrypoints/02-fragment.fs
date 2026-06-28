@@ -38,7 +38,7 @@ void main()
         //Calcule dados da luz (atenuação, cor, direção)
         float attenuation = computeLightAttenuation(light, worldPosition);
         vec3 lightColor = light.color;
-        vec3 lightDirection = light.direction;
+        vec3 lightDirection = computeLightDirection(light, worldPosition);
 
 
         //Calcule o half-angle
