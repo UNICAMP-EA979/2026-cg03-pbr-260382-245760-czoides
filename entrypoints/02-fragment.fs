@@ -12,6 +12,7 @@
 in vec3 worldPosition;
 in vec3 worldNormal;
 in vec3 cameraPos;
+
 out vec4 FragColor;
 
 uniform Light lights[MAX_LIGHT];
