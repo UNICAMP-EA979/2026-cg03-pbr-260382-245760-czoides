@@ -53,9 +53,9 @@ class Texture:
         # Especifica os dados da textura
 
         # Gera os mipmaps da textura
-        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGB, 
+        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, self._internal_format, 
                         texture_data.shape[1], texture_data.shape[0],
-                        0, GL.GL_RGB, GL.GL_UNSIGNED_BYTE,
+                        0, self._data_format, GL.GL_UNSIGNED_BYTE,
                         texture_data)
 
         #########################################################################
