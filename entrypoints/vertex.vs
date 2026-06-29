@@ -22,6 +22,7 @@ layout(location = 3) in vec3 normal;
 out vec3 worldPosition;
 out vec3 worldNormal;
 out vec2 uv;
+out vec3 cameraPos;
 
 uniform mat4 modelTransformation;
 uniform mat4 viewTransformation;
@@ -29,13 +30,22 @@ uniform mat4 projectionMatrix;
 
 void main()
 {
-    worldPosition =;
+    vec4 tmp = (modelTransformation * vec4(position, 1.0));
+    worldPosition = tmp.xyz;
 
-    worldNormal =;
+    mat3 normalMatrix = transpose(inverse(mat3(modelTransformation)));
+    worldNormal = normalize( normalMatrix * normal);
+    uv = vertexUV;
 
-    uv =;
+    mat3 R = mat3(viewTransformation);
 
-    gl_Position =;
+    // 2. Extract the translation vector (the top 3 elements of the 4th column)
+    vec3 t = vec3(viewTransformation[3][0], viewTransformation[3][1], viewTransformation[3][2]);
+
+    // 3. Compute camera position: C = -transpose(R) * t
+    cameraPos = -transpose(R) * t;
+
+    gl_Position = projectionMatrix * viewTransformation * tmp;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////

@@ -50,18 +50,30 @@ class OpenGLRenderer(Renderer):
 
         ## SEU CÓDIGO AQUI ######################################################
         # Inicializa o GLFW, core profile e OpenGL 3.3
+        glfw.init()
+
+        # Força versões do OpenGL
+        glfw.window_hint(glfw.CONTEXT_VERSION_MAJOR, 3)
+        glfw.window_hint(glfw.CONTEXT_VERSION_MINOR, 3)
+        # Usa apenas Core profile
+        glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
 
         #########################################################################
 
         ## SEU CÓDIGO AQUI ######################################################
         # Cria a janela, associando ela ao contexto
         # e configurando o tamanho dela no OpenGl
+        window = glfw.create_window(screen_width, screen_height, "LearnOpenGL", None, None)
+        glfw.make_context_current(window)
+
+        # Seta tamamho da tela
+        GL.glViewport(0, 0, screen_width, screen_height)
 
         #########################################################################
 
         ## SEU CÓDIGO AQUI ######################################################
         # Habilite o uso de GL_FRAMEBUFFER_SRGB para convertor cores para sRGB
-
+        GL.glEnable(GL.GL_FRAMEBUFFER_SRGB)
         #########################################################################
 
         glfw.set_framebuffer_size_callback(
@@ -108,6 +120,11 @@ class OpenGLRenderer(Renderer):
         ## SEU CÓDIGO AQUI ######################################################
         # Limpe os buffers de cor e profundidade (COLOR_BUFFER e DEPTH_BUFFER)
         # Para o de cor, utilize a cor self.background_color
+        GL.glClearColor(self.background_color[0],
+                        self.background_color[1],
+                        self.background_color[2],
+                        self.background_color[3])
+        GL.glClear(int(GL.GL_COLOR_BUFFER_BIT) | int(GL.GL_DEPTH_BUFFER_BIT))
 
         #########################################################################
 
@@ -156,6 +173,9 @@ class OpenGLRenderer(Renderer):
         # uniform para todo uso do material.
         #
         # Atente-se que os valores precisam ser convertidos para np.float32
+        material.shader.set_uniform("modelTransformation", model_transformation.astype(np.float32))
+        material.shader.set_uniform("viewTransformation", self._view_matrix.astype(np.float32))
+        material.shader.set_uniform("projectionMatrix", self._projection_matrix.astype(np.float32))
 
         #########################################################################
 
@@ -169,7 +189,20 @@ class OpenGLRenderer(Renderer):
 
         for i, light_info in enumerate(self._lights):
             light = cast(Light, light_info["node"])
+
             light_position = cast(np.ndarray, light_info["position"])
+            light_color = cast(np.ndarray, light.light_color)
+            light_type = cast(np.ndarray, light.light_type)
+            light_intensity = cast(np.ndarray, light.light_intensity)
+            light_direction = cast(np.ndarray, light.light_direction)
+            light_ref_distance = cast(np.ndarray, light.light_reference_distance)
+            
+            material.shader.set_uniform(f"lights[{i}].position",light_position)
+            material.shader.set_uniform(f"lights[{i}].color",light_color)
+            material.shader.set_uniform(f"lights[{i}].type",light_type.value)
+            material.shader.set_uniform(f"lights[{i}].intensity",light_intensity)
+            material.shader.set_uniform(f"lights[{i}].direction",light_direction)
+            material.shader.set_uniform(f"lights[{i}].reference_distance",light_ref_distance)
 
         #########################################################################
 
@@ -177,6 +210,7 @@ class OpenGLRenderer(Renderer):
         # Defina a uniform ambientColor para self.ambient_color
         #
         # Utilize o método set_uniform do shader
+        material.shader.set_uniform("ambientColor", self.ambient_color)
 
         #########################################################################
 
@@ -212,7 +246,7 @@ class OpenGLRenderer(Renderer):
 
         ## SEU CÓDIGO AQUI ######################################################
         # Troque o buffer frontal e traseiro, mostrando o novo buffer renderizado
-
+        glfw.swap_buffers(self._window)
         #########################################################################
 
         glfw.poll_events()
